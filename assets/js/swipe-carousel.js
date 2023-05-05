@@ -1,34 +1,31 @@
-import Carousel from "../js/carousel.js";
-
-class SwipeCarousel extends Carousel {
-  constructor(...args) {
-    super(...args);
-  }
-
-  _initListeners() {
-    super._initListeners();
-    this.container.addEventListener("touchstart", this.swipeStart.bind(this));
-    this.container.addEventListener("mousedown", this.swipeStart.bind(this));
-    this.container.addEventListener("touchend", this.swipeEnd.bind(this));
-    this.container.addEventListener("mouseup", this.swipeEnd.bind(this));
-  }
-
-  swipeStart(e) {
-    this.startPosX =
-      e instanceof MouseEvent
-        ? e.pageX
-        : e.changedTouches[0].pageX;
-  }
-
-  swipeEnd(e) {
-    this.endPosX =
-      e instanceof MouseEvent
-        ? e.pageX
-        : e.changedTouches[0].pageX;
-
-    if (this.endPosX - this.startPosX > 100) this.prevHandler();
-    if (this.endPosX - this.startPosX < -100) this.nextHandler();
-  };
+function SwipeCarousel() {
+  Carousel.apply(this, arguments);
 }
 
-export default SwipeCarousel;
+SwipeCarousel.prototype = Object.create(Carousel.prototype);
+SwipeCarousel.prototype.constructor = SwipeCarousel;
+
+SwipeCarousel.prototype._initListeners = function () {
+  Carousel.prototype._initListeners.apply(this);
+  this.container.addEventListener("touchstart", this.swipeStart.bind(this));
+  this.container.addEventListener("mousedown", this.swipeStart.bind(this));
+  this.container.addEventListener("touchend", this.swipeEnd.bind(this));
+  this.container.addEventListener("mouseup", this.swipeEnd.bind(this));
+};
+
+SwipeCarousel.prototype.swipeStart = function (e) {
+  this.startPosX =
+    e instanceof MouseEvent
+      ? e.pageX
+      : e.changedTouches[0].pageX;
+};
+
+SwipeCarousel.prototype.swipeEnd = function (e) {
+  this.endPosX =
+    e instanceof MouseEvent
+      ? e.pageX
+      : e.changedTouches[0].pageX;
+
+  if (this.endPosX - this.startPosX > 100) this.prevHandler();
+  if (this.endPosX - this.startPosX < -100) this.nextHandler();
+};
